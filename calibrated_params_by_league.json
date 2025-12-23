@@ -1,0 +1,458 @@
+{
+  "global": {
+    "league_avg_goals": 1.387,
+    "home_advantage": 1.146,
+    "away_penalty": 0.854
+  },
+  "leagues": {
+    "Friendly": {
+      "league_avg_goals": 1.275,
+      "home_advantage": 1.225,
+      "away_penalty": 0.775,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 4862,
+      "low_scoring_rate": 0.413
+    },
+    "FIFA World Cup qualification": {
+      "league_avg_goals": 1.411,
+      "home_advantage": 1.182,
+      "away_penalty": 0.818,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 3340,
+      "low_scoring_rate": 0.359
+    },
+    "FA Cup": {
+      "league_avg_goals": 1.471,
+      "home_advantage": 1.131,
+      "away_penalty": 0.869,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 1432,
+      "low_scoring_rate": 0.318
+    },
+    "EC": {
+      "league_avg_goals": 1.433,
+      "home_advantage": 1.106,
+      "away_penalty": 0.894,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 1104,
+      "low_scoring_rate": 0.342
+    },
+    "UEFA Euro qualification": {
+      "league_avg_goals": 1.418,
+      "home_advantage": 1.132,
+      "away_penalty": 0.868,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 1016,
+      "low_scoring_rate": 0.318
+    },
+    "African Cup of Nations qualification": {
+      "league_avg_goals": 1.183,
+      "home_advantage": 1.249,
+      "away_penalty": 0.751,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 1003,
+      "low_scoring_rate": 0.447
+    },
+    "UEFA Nations League": {
+      "league_avg_goals": 1.256,
+      "home_advantage": 1.129,
+      "away_penalty": 0.871,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 658,
+      "low_scoring_rate": 0.397
+    },
+    "CONCACAF Nations League": {
+      "league_avg_goals": 1.594,
+      "home_advantage": 1.136,
+      "away_penalty": 0.864,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 422,
+      "low_scoring_rate": 0.277
+    },
+    "T1_2122": {
+      "league_avg_goals": 1.404,
+      "home_advantage": 1.136,
+      "away_penalty": 0.864,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 380,
+      "low_scoring_rate": 0.337
+    },
+    "T1": {
+      "league_avg_goals": 1.397,
+      "home_advantage": 1.128,
+      "away_penalty": 0.872,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 380,
+      "low_scoring_rate": 0.355
+    },
+    "T1_2223": {
+      "league_avg_goals": 1.522,
+      "home_advantage": 1.093,
+      "away_penalty": 0.907,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 342,
+      "low_scoring_rate": 0.284
+    },
+    "African Cup of Nations": {
+      "league_avg_goals": 1.072,
+      "home_advantage": 1.106,
+      "away_penalty": 0.894,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 313,
+      "low_scoring_rate": 0.521
+    },
+    "B1": {
+      "league_avg_goals": 1.409,
+      "home_advantage": 1.129,
+      "away_penalty": 0.871,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 312,
+      "low_scoring_rate": 0.369
+    },
+    "P1_2122": {
+      "league_avg_goals": 1.319,
+      "home_advantage": 1.086,
+      "away_penalty": 0.914,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 306,
+      "low_scoring_rate": 0.376
+    },
+    "P1": {
+      "league_avg_goals": 1.433,
+      "home_advantage": 1.106,
+      "away_penalty": 0.894,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 306,
+      "low_scoring_rate": 0.366
+    },
+    "B1_2122": {
+      "league_avg_goals": 1.471,
+      "home_advantage": 1.064,
+      "away_penalty": 0.936,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 306,
+      "low_scoring_rate": 0.301
+    },
+    "P1_2223": {
+      "league_avg_goals": 1.247,
+      "home_advantage": 1.135,
+      "away_penalty": 0.865,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 306,
+      "low_scoring_rate": 0.412
+    },
+    "B1_2223": {
+      "league_avg_goals": 1.518,
+      "home_advantage": 1.087,
+      "away_penalty": 0.913,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 306,
+      "low_scoring_rate": 0.284
+    },
+    "AFC Asian Cup qualification": {
+      "league_avg_goals": 1.461,
+      "home_advantage": 1.244,
+      "away_penalty": 0.756,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 269,
+      "low_scoring_rate": 0.316
+    },
+    "FIFA World Cup": {
+      "league_avg_goals": 1.283,
+      "home_advantage": 1.059,
+      "away_penalty": 0.941,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 256,
+      "low_scoring_rate": 0.387
+    },
+    "Gold Cup": {
+      "league_avg_goals": 1.42,
+      "home_advantage": 1.286,
+      "away_penalty": 0.714,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 225,
+      "low_scoring_rate": 0.387
+    },
+    "COSAFA Cup": {
+      "league_avg_goals": 1.139,
+      "home_advantage": 1.131,
+      "away_penalty": 0.869,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 201,
+      "low_scoring_rate": 0.458
+    },
+    "UEFA Euro": {
+      "league_avg_goals": 1.204,
+      "home_advantage": 1.07,
+      "away_penalty": 0.93,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 184,
+      "low_scoring_rate": 0.435
+    },
+    "SP1": {
+      "league_avg_goals": 1.276,
+      "home_advantage": 1.157,
+      "away_penalty": 0.843,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 170,
+      "low_scoring_rate": 0.388
+    },
+    "Copa Am\u00e9rica": {
+      "league_avg_goals": 1.171,
+      "home_advantage": 1.196,
+      "away_penalty": 0.804,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 170,
+      "low_scoring_rate": 0.465
+    },
+    "E0": {
+      "league_avg_goals": 1.42,
+      "home_advantage": 1.133,
+      "away_penalty": 0.867,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 169,
+      "low_scoring_rate": 0.284
+    },
+    "AFC Asian Cup": {
+      "league_avg_goals": 1.316,
+      "home_advantage": 1.043,
+      "away_penalty": 0.957,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 166,
+      "low_scoring_rate": 0.367
+    },
+    "I1": {
+      "league_avg_goals": 1.17,
+      "home_advantage": 1.085,
+      "away_penalty": 0.915,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 156,
+      "low_scoring_rate": 0.429
+    },
+    "N1": {
+      "league_avg_goals": 1.628,
+      "home_advantage": 1.099,
+      "away_penalty": 0.901,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 152,
+      "low_scoring_rate": 0.243
+    },
+    "AFF Championship": {
+      "league_avg_goals": 1.573,
+      "home_advantage": 1.25,
+      "away_penalty": 0.75,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 150,
+      "low_scoring_rate": 0.253
+    },
+    "Island Games": {
+      "league_avg_goals": 2.02,
+      "home_advantage": 1.093,
+      "away_penalty": 0.907,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 149,
+      "low_scoring_rate": 0.174
+    },
+    "CFU Caribbean Cup qualification": {
+      "league_avg_goals": 1.865,
+      "home_advantage": 1.147,
+      "away_penalty": 0.853,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 144,
+      "low_scoring_rate": 0.222
+    },
+    "F1": {
+      "league_avg_goals": 1.427,
+      "home_advantage": 1.202,
+      "away_penalty": 0.798,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 144,
+      "low_scoring_rate": 0.396
+    },
+    "CECAFA Cup": {
+      "league_avg_goals": 1.123,
+      "home_advantage": 1.154,
+      "away_penalty": 0.846,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 142,
+      "low_scoring_rate": 0.437
+    },
+    "D1": {
+      "league_avg_goals": 1.578,
+      "home_advantage": 1.08,
+      "away_penalty": 0.92,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 135,
+      "low_scoring_rate": 0.296
+    },
+    "Gulf Cup": {
+      "league_avg_goals": 1.154,
+      "home_advantage": 0.988,
+      "away_penalty": 1.012,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 107,
+      "low_scoring_rate": 0.458
+    },
+    "SC0": {
+      "league_avg_goals": 1.286,
+      "home_advantage": 1.119,
+      "away_penalty": 0.881,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 105,
+      "low_scoring_rate": 0.352
+    },
+    "CONIFA World Football Cup": {
+      "league_avg_goals": 2.099,
+      "home_advantage": 0.976,
+      "away_penalty": 1.024,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 101,
+      "low_scoring_rate": 0.267
+    },
+    "SAFF Cup": {
+      "league_avg_goals": 1.43,
+      "home_advantage": 1.221,
+      "away_penalty": 0.779,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 79,
+      "low_scoring_rate": 0.367
+    },
+    "EAFF Championship": {
+      "league_avg_goals": 1.604,
+      "home_advantage": 1.158,
+      "away_penalty": 0.842,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 77,
+      "low_scoring_rate": 0.273
+    },
+    "Pacific Games": {
+      "league_avg_goals": 2.787,
+      "home_advantage": 1.062,
+      "away_penalty": 0.938,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 75,
+      "low_scoring_rate": 0.133
+    },
+    "Arab Cup": {
+      "league_avg_goals": 1.264,
+      "home_advantage": 1.123,
+      "away_penalty": 0.877,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 74,
+      "low_scoring_rate": 0.392
+    },
+    "CONCACAF Nations League qualification": {
+      "league_avg_goals": 1.934,
+      "home_advantage": 1.148,
+      "away_penalty": 0.852,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 68,
+      "low_scoring_rate": 0.206
+    },
+    "WAFF Championship": {
+      "league_avg_goals": 0.967,
+      "home_advantage": 1.119,
+      "away_penalty": 0.881,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 61,
+      "low_scoring_rate": 0.525
+    },
+    "AFC Challenge Cup": {
+      "league_avg_goals": 1.302,
+      "home_advantage": 1.06,
+      "away_penalty": 0.94,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 58,
+      "low_scoring_rate": 0.293
+    },
+    "AFC Challenge Cup qualification": {
+      "league_avg_goals": 1.37,
+      "home_advantage": 1.257,
+      "away_penalty": 0.743,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 54,
+      "low_scoring_rate": 0.407
+    },
+    "CONIFA European Football Cup": {
+      "league_avg_goals": 1.592,
+      "home_advantage": 1.103,
+      "away_penalty": 0.897,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 49,
+      "low_scoring_rate": 0.347
+    },
+    "Indian Ocean Island Games": {
+      "league_avg_goals": 1.163,
+      "home_advantage": 1.246,
+      "away_penalty": 0.754,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 49,
+      "low_scoring_rate": 0.49
+    },
+    "CFU Caribbean Cup": {
+      "league_avg_goals": 1.12,
+      "home_advantage": 0.874,
+      "away_penalty": 1.126,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 46,
+      "low_scoring_rate": 0.5
+    },
+    "Oceania Nations Cup": {
+      "league_avg_goals": 1.795,
+      "home_advantage": 1.228,
+      "away_penalty": 0.772,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 44,
+      "low_scoring_rate": 0.386
+    },
+    "UNCAF Cup": {
+      "league_avg_goals": 1.105,
+      "home_advantage": 1.19,
+      "away_penalty": 0.81,
+      "dixon_coles_rho": -0.1,
+      "matches_analyzed": 38,
+      "low_scoring_rate": 0.474
+    },
+    "AFF Championship qualification": {
+      "league_avg_goals": 1.708,
+      "home_advantage": 1.154,
+      "away_penalty": 0.846,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 36,
+      "low_scoring_rate": 0.278
+    },
+    "Gold Cup qualification": {
+      "league_avg_goals": 1.75,
+      "home_advantage": 1.328,
+      "away_penalty": 0.672,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 34,
+      "low_scoring_rate": 0.324
+    },
+    "Confederations Cup": {
+      "league_avg_goals": 1.734,
+      "home_advantage": 1.171,
+      "away_penalty": 0.829,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 32,
+      "low_scoring_rate": 0.219
+    },
+    "King's Cup": {
+      "league_avg_goals": 1.484,
+      "home_advantage": 1.043,
+      "away_penalty": 0.957,
+      "dixon_coles_rho": -0.08,
+      "matches_analyzed": 31,
+      "low_scoring_rate": 0.323
+    },
+    "Coupe de l'Outre-Mer": {
+      "league_avg_goals": 2.417,
+      "home_advantage": 1.324,
+      "away_penalty": 0.676,
+      "dixon_coles_rho": -0.05,
+      "matches_analyzed": 30,
+      "low_scoring_rate": 0.233
+    }
+  },
+  "total_leagues": 56
+}

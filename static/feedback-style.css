@@ -1,0 +1,62 @@
+/* Feedback Score Section Styles */
+.score-section {
+    margin-bottom: 1.5rem;
+}
+
+.score-section-title {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+}
+
+.score-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--background);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid var(--surface-light);
+}
+
+.score-separator {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.score-input-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.score-input-group label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    text-align: center;
+}
+
+.score-input-group input {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding: 0.5rem;
+}
+
+/* Specific styling for HT inputs to distinguish them */
+#ht-home-goals,
+#ht-away-goals {
+    background: rgba(99, 102, 241, 0.05);
+    border-color: var(--primary-light);
+}
+
+#ht-home-goals:focus,
+#ht-away-goals:focus {
+    background: var(--surface);
+}

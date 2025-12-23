@@ -1,0 +1,28 @@
+============================================================
+ENHANCED MODEL VALIDATION RESULTS
+Combined Dataset: International + Domestic Leagues
+============================================================
+
+Total matches tested: 1000
+Test period: 2025-10-03 00:00:00 to 2025-12-21 00:00:00
+
+MAE (Total Goals): 1.462
+Median AE (Total Goals): 1.262
+BTTS Accuracy: 50.5%
+Exact Score in Top 5: 45.0%
+
+By Source:
+  Domestic       : MAE = 1.397 (647 matches)
+  International  : MAE = 1.581 (353 matches)
+
+Top 10 Competitions:
+  FIFA World Cup qualification  : MAE = 1.671 (159 matches)
+  E0                            : MAE = 1.289 (108 matches)
+  I1                            : MAE = 1.383 (105 matches)
+  SP1                           : MAE = 1.221 (100 matches)
+  F1                            : MAE = 1.607 (89 matches)
+  Friendly                      : MAE = 1.480 (89 matches)
+  D1                            : MAE = 1.572 (89 matches)
+  N1                            : MAE = 1.504 (88 matches)
+  SC0                           : MAE = 1.212 (68 matches)
+  AFC Asian Cup qualification   : MAE = 1.645 (35 matches)

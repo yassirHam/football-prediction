@@ -1,0 +1,26 @@
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+env/
+venv/
+.env
+
+# Runtime Data (Logs & History)
+prediction_history.json
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Note: We are TRACKING data/ folder as it contains the learned matches
+# If you want to ignore data, uncomment the line below:
+# data/

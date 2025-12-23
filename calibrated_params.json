@@ -1,0 +1,13 @@
+{
+  "league_avg_goals": 1.387,
+  "home_advantage": 1.146,
+  "away_penalty": 0.854,
+  "dixon_coles_rho": -0.08,
+  "accuracy_metrics": {
+    "total_goals_mae": 1.6555555555555554,
+    "off_by_one_rate": 30.0,
+    "btts_accuracy": 51.11111111111111,
+    "exact_score_top5_rate": 40.0,
+    "matches_analyzed": 90
+  }
+}
