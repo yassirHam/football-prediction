@@ -268,6 +268,26 @@ function displayResults(result) {
     document.getElementById('match-title').textContent =
         `${team1Label} vs ${team2Label}${isNeutral ? ' (Neutral Venue)' : ''}`;
 
+    // Display Hybrid Metadata (NEW)
+    if (result.hybrid_metadata) {
+        const badge = document.getElementById('hybrid-badge');
+        const source = document.getElementById('badge-source');
+        const confidence = document.getElementById('badge-confidence');
+
+        const isXGBoost = result.hybrid_metadata.source === 'xgboost';
+        source.textContent = isXGBoost ? '🤖 XGBoost' : '📊 Poisson';
+        source.className = `badge-source ${isXGBoost ? 'source-ml' : 'source-poisson'}`;
+
+        if (isXGBoost) {
+            confidence.textContent = `(${result.hybrid_metadata.confidence.toFixed(1)}% confidence)`;
+            confidence.style.display = 'inline';
+        } else {
+            confidence.style.display = 'none';
+        }
+
+        badge.style.display = 'flex';
+    }
+
     // Expected goals
     document.getElementById('home-xg-label').textContent = team1Label;
     document.getElementById('home-xg').textContent = result.expected_goals.home;
@@ -301,10 +321,66 @@ function displayResults(result) {
 
     // Enhanced features
     displayConfidence(result.confidence_score, result.confidence_breakdown);
-    displayBettingInsights(result.betting_insights);  // New function call
+    displayBettingInsights(result.betting_insights);
     displayPredictionIntervals(result.prediction_intervals, team1Label, team2Label);
     displayTeamMomentum(result.team_insights, team1Label, team2Label);
     displayModelQuality(result.model_quality);
+
+    // Display Decision Signal (NEW)
+    if (result.decision_signal) {
+        displayDecisionSignal(result.decision_signal);
+    }
+}
+
+function displayDecisionSignal(signalData) {
+    const container = document.getElementById('decision-card');
+    const signal = signalData.signal;
+
+    let colorClass, icon, title;
+
+    if (signal === 'STRONG') {
+        colorClass = 'signal-strong';
+        icon = '🚀';
+        title = 'STRONG SIGNAL';
+    } else if (signal === 'PASS') {
+        colorClass = 'signal-pass';
+        icon = '⚠️';
+        title = 'PASS / CAUTION';
+    } else {
+        colorClass = 'signal-weak';
+        icon = '🛑';
+        title = 'WEAK SIGNAL';
+    }
+
+    let html = `
+        <div class="decision-card ${colorClass}">
+            <div class="decision-header">
+                <span class="decision-icon">${icon}</span>
+                <span class="decision-title">${title}</span>
+            </div>
+            
+            <div class="decision-content">
+                <div class="decision-recommendations">
+                    <h4>Recommendations:</h4>
+                    <ul>
+                        ${signalData.recommendations.length > 0 ?
+            signalData.recommendations.map(rec => `<li>${rec}</li>`).join('') :
+            '<li>No specific recommendations for this match.</li>'}
+                    </ul>
+                </div>
+                
+                <div class="decision-reasoning">
+                    <h4>Reasoning:</h4>
+                    <ul>
+                         ${signalData.reasoning.map(r => `<li>${r}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.innerHTML = html;
+    container.style.display = 'block';
 }
 
 function displayBettingInsights(insights) {

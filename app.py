@@ -9,6 +9,7 @@ from flask import Flask, render_template, request, jsonify
 import os
 import json
 from datetime import datetime
+from decision_engine.signal_generator import SignalGenerator
 
 # Load configuration to determine which predictor to use
 USE_HYBRID_MODE = True  # Can be toggled via config
@@ -35,6 +36,7 @@ else:
     print("ℹ️  Using PURE POISSON prediction mode")
 
 app = Flask(__name__)
+signal_generator = SignalGenerator()
 
 HISTORY_FILE = 'prediction_history.json'
 
@@ -176,8 +178,13 @@ def predict():
             "model_quality": result.get('model_quality', {}),
             "betting_insights": result.get('betting_insights', {}),
             "insights": result['insights'],
+            "insights": result['insights'],
             "prediction_mode": "hybrid" if USE_HYBRID_MODE else "poisson",
-            "hybrid_metadata": result.get('hybrid_metadata', {})
+            "hybrid_metadata": {
+                "source": result.get('hybrid_metadata', {}).get('source', 'poisson'),
+                "confidence": float(result.get('hybrid_metadata', {}).get('confidence', 0))
+            },
+            "decision_signal": signal_generator.generate_signal(result, league=data.get('home_team', {}).get('competition_type', 'DEFAULT'))
         }
         
         return jsonify(response)

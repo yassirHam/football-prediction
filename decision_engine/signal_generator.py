@@ -86,14 +86,21 @@ class SignalGenerator:
                 recommendations.append(f"Under 2.5 Goals ({total_goals:.1f} xG)")
         
         # Build reasoning
+        # Build reasoning
         reasoning = []
         if filter_results['filters']['confidence'] == 'STRONG':
             reasoning.append(f"High confidence ({confidence:.1f}%)")
         elif filter_results['filters']['confidence'] == 'WEAK':
             reasoning.append(f"Low confidence ({confidence:.1f}%)")
+        else:
+            reasoning.append(f"Moderate confidence ({confidence:.1f}%)")
         
         if filter_results['filters']['goals_distance'] == 'STRONG':
             reasoning.append("Significant deviation from league average")
+        
+        # Add a default if empty (though confidence should cover it now)
+        if not reasoning:
+            reasoning.append("Standard prediction metrics")
         
         return {
             'signal': signal,
