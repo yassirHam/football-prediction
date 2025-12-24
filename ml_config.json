@@ -1,0 +1,17 @@
+{
+    "ml_enabled": false,
+    "use_ensemble": false,
+    "ml_validation_metrics": {
+        "log_loss": null,
+        "accuracy": null,
+        "mae": null,
+        "validated_date": null,
+        "training_samples": 0
+    },
+    "feature_gates": {
+        "rolling_form": true,
+        "h2h": false,
+        "home_away_splits": true
+    },
+    "last_updated": null
+}

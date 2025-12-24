@@ -1,14 +1,38 @@
 """
 Flask Web Application for Football Match Prediction
 ====================================================
-A simple web interface to test predictions with a beautiful UI.
+A web interface for football predictions with hybrid XGBoost-Poisson architecture.
+Supports both hybrid mode (ML + Poisson) and pure Poisson mode via configuration.
 """
 
 from flask import Flask, render_template, request, jsonify
-from enhanced_predictor import Team, enhanced_predict_match as predict_match
 import os
 import json
 from datetime import datetime
+
+# Load configuration to determine which predictor to use
+USE_HYBRID_MODE = True  # Can be toggled via config
+try:
+    if os.path.exists('hybrid_config.json'):
+        with open('hybrid_config.json', 'r') as f:
+            config = json.load(f)
+            USE_HYBRID_MODE = config.get('enable_ml', True)
+except:
+    pass
+
+# Import appropriate predictor based on configuration
+if USE_HYBRID_MODE:
+    try:
+        from hybrid.hybrid_predictor import Team, predict_match_hybrid as predict_match
+        print("✅ Using HYBRID prediction mode (XGBoost + Poisson)")
+    except ImportError as e:
+        print(f"⚠️  Hybrid mode enabled but import failed: {e}")
+        print("   Falling back to enhanced Poisson predictor")
+        from enhanced_predictor import Team, enhanced_predict_match as predict_match
+        USE_HYBRID_MODE = False
+else:
+    from enhanced_predictor import Team, enhanced_predict_match as predict_match
+    print("ℹ️  Using PURE POISSON prediction mode")
 
 app = Flask(__name__)
 
@@ -151,7 +175,9 @@ def predict():
             "team_insights": result.get('team_insights', {}),
             "model_quality": result.get('model_quality', {}),
             "betting_insights": result.get('betting_insights', {}),
-            "insights": result['insights']
+            "insights": result['insights'],
+            "prediction_mode": "hybrid" if USE_HYBRID_MODE else "poisson",
+            "hybrid_metadata": result.get('hybrid_metadata', {})
         }
         
         return jsonify(response)

@@ -1,0 +1,2 @@
+timestamp,home_team,away_team,source,confidence,xg_home,xg_away,total_xg,prob_home_win,prob_draw,prob_away_win,actual_home_goals,actual_away_goals,prediction_correct,goal_error
+2025-12-24T17:08:29.428447,Team A,Team B,xgboost,72.5,1.80,1.20,3.00,0.480,0.250,0.270,2,1,True,0.40

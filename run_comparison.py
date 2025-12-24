@@ -22,13 +22,20 @@ def load_matches():
         try:
             df = pd.read_csv(csv_file, encoding='utf-8-sig')
             df.columns = df.columns.str.replace('\ufeff', '').str.strip()
-            if all(col in df.columns for col in ['HomeTeam', 'AwayTeam', 'FTHG', 'FTAG']):
+            if all(col in df.columns for col in ['HomeTeam', 'AwayTeam', 'FTHG', 'FTAG', 'Date']):
+                df['Date'] = pd.to_datetime(df['Date'], dayfirst=True, errors='coerce')
+                df = df.dropna(subset=['Date'])
                 league = csv_file.split('\\')[-1].replace('.csv', '')
                 df['League'] = league
                 all_matches.append(df)
         except:
             pass
-    return pd.concat(all_matches, ignore_index=True) if all_matches else pd.DataFrame()
+    
+    if not all_matches:
+        return pd.DataFrame()
+        
+    combined = pd.concat(all_matches, ignore_index=True)
+    return combined.sort_values('Date').reset_index(drop=True)
 
 def create_base_team(team_name, df, idx):
     prev = df.iloc[:idx]

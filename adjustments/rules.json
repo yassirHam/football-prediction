@@ -1,0 +1,19 @@
+{
+    "adjustments": {
+        "key_attacker_missing": -0.15,
+        "key_defender_missing": 0.12,
+        "goalkeeper_missing": 0.20,
+        "multiple_absences_multiplier": 1.5,
+        "max_adjustment_per_team": 0.3
+    },
+    "key_player_definitions": {
+        "attacker_threshold_goals_per_match": 0.5,
+        "defender_importance": "starter",
+        "goalkeeper_importance": "always_key"
+    },
+    "notes": [
+        "Adjustments are applied post-prediction, pre-Poisson scoring",
+        "All adjustments are transparent and reversible",
+        "Caps prevent excessive modifications"
+    ]
+}

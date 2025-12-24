@@ -1,0 +1,30 @@
+{
+    "enable_ml": true,
+    "confidence_threshold": 25,
+    "fallback_mode": "poisson",
+    "use_ensemble": false,
+    "ensemble_weights": {
+        "E0": {
+            "xgb": 0.7,
+            "poisson": 0.3
+        },
+        "SP1": {
+            "xgb": 0.7,
+            "poisson": 0.3
+        },
+        "DEFAULT": {
+            "xgb": 0.6,
+            "poisson": 0.4
+        }
+    },
+    "xg_bounds": {
+        "min": 0.0,
+        "max": 6.0,
+        "warn_threshold": 5.0
+    },
+    "monitoring": {
+        "log_fallbacks": true,
+        "alert_on_low_confidence": true,
+        "log_file": "hybrid_predictions.log"
+    }
+}

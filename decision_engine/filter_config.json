@@ -1,0 +1,13 @@
+{
+    "confidence_threshold": 30,
+    "goals_distance_threshold": 0.4,
+    "league_averages": {
+        "E0": 2.7,
+        "SP1": 2.6,
+        "D1": 2.9,
+        "I1": 2.5,
+        "F1": 2.4,
+        "DEFAULT": 2.7
+    },
+    "odds_value_margin": 0.05
+}
