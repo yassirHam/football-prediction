@@ -60,6 +60,11 @@ def load_and_prepare_data(data_dir: str = 'data'):
     full_df = pd.concat(dfs, ignore_index=True).sort_values('Date')
     print(f"Total matches loaded: {len(full_df)}")
     
+    # ⚠️ TIME-SERIES SAFETY: Verify chronological ordering
+    # This assertion prevents future data from leaking into past predictions
+    assert full_df['Date'].is_monotonic_increasing, "CRITICAL: Data must be chronologically sorted!"
+    print("✅ Chronological ordering verified")
+    
     # Initialize Feature Builder
     builder = FeatureBuilder()
     
@@ -79,57 +84,96 @@ def load_and_prepare_data(data_dir: str = 'data'):
     # team_name -> {scored: [], conceded: []}
     team_history = {}
     
+    # Diagnostic counters
+    total_matches = 0
+    skipped_no_history = 0
+    skipped_min_history = 0
+    training_examples_added = 0
+    
     # Process all matches chronologically
     for i, match in full_df.iterrows():
         home = match['HomeTeam']
         away = match['AwayTeam']
+        total_matches += 1
         
-        # 1. Build features using current history
-        # (Need at least some history to be valid)
-        if home in team_history and away in team_history:
-            # Create Team objects from state
-            h_hist = team_history[home]
-            a_hist = team_history[away]
+        # 1. Initialize teams FIRST (before any checks)
+        if home not in team_history:
+            team_history[home] = {'scored': [], 'conceded': []}
+        if away not in team_history:
+            team_history[away] = {'scored': [], 'conceded': []}
+        
+        # 2. Build features using current history
+        # Check if we have minimum history required (3 matches each)
+        h_hist = team_history[home]
+        a_hist = team_history[away]
+        
+        if len(h_hist['scored']) >= 3 and len(a_hist['scored']) >= 3:
+            # Create Team objects from state (use last 10 matches max)
+            home_team = Team(
+                name=home,
+                goals_scored=h_hist['scored'][-10:],
+                goals_conceded=h_hist['conceded'][-10:],
+                first_half_goals=[0]*5
+            )
+            away_team = Team(
+                name=away,
+                goals_scored=a_hist['scored'][-10:],
+                goals_conceded=a_hist['conceded'][-10:],
+                first_half_goals=[0]*5
+            )
             
-            # Need min history?
-            if len(h_hist['scored']) >= 3 and len(a_hist['scored']) >= 3:
-                 home_team = Team(name=home, goals_scored=h_hist['scored'][-10:], goals_conceded=h_hist['conceded'][-10:], first_half_goals=[0]*5)
-                 away_team = Team(name=away, goals_scored=a_hist['scored'][-10:], goals_conceded=a_hist['conceded'][-10:], first_half_goals=[0]*5)
-                 
-                 # Set league for params lookup
-                 home_team.league = match.get('League', 'DEFAULT')
-                 away_team.league = match.get('League', 'DEFAULT')
-                 
-                 # Params (ideally dynamic per league)
-                 params = {'league_avg_goals': 1.4, 'home_advantage': 1.15, 'away_penalty': 0.85}
-                 
-                 try:
-                     features = builder.build_features_for_match(home_team, away_team, params)
-                     
-                     # Targets
-                     h_goals = int(match['FTHG'])
-                     a_goals = int(match['FTAG'])
-                     
-                     if h_goals > a_goals: outcome = 2
-                     elif h_goals == a_goals: outcome = 1
-                     else: outcome = 0
-                     
-                     X_list.append(features)
-                     y_outcome_list.append(outcome)
-                     y_home_list.append(h_goals)
-                     y_away_list.append(a_goals)
-                 except Exception:
-                     pass
+            # Set league for params lookup
+            home_team.league = match.get('League', 'DEFAULT')
+            away_team.league = match.get('League', 'DEFAULT')
+            
+            # Params (ideally dynamic per league)
+            params = {
+                'league_avg_goals': 1.4,
+                'home_advantage': 1.15,
+                'away_penalty': 0.85
+            }
+            
+            try:
+                features = builder.build_features_for_match(home_team, away_team, params)
+                
+                # Targets
+                h_goals = int(match['FTHG'])
+                a_goals = int(match['FTAG'])
+                
+                if h_goals > a_goals:
+                    outcome = 2  # Home win
+                elif h_goals == a_goals:
+                    outcome = 1  # Draw
+                else:
+                    outcome = 0  # Away win
+                
+                X_list.append(features)
+                y_outcome_list.append(outcome)
+                y_home_list.append(h_goals)
+                y_away_list.append(a_goals)
+                training_examples_added += 1
+            except Exception as e:
+                # Feature engineering failed
+                pass
+        else:
+            # Not enough history for at least one team
+            skipped_min_history += 1
 
-        # 2. Update history
-        if home not in team_history: team_history[home] = {'scored': [], 'conceded': []}
-        if away not in team_history: team_history[away] = {'scored': [], 'conceded': []}
-        
+        # 3. Update history AFTER using it (chronological integrity)
         team_history[home]['scored'].append(match['FTHG'])
         team_history[home]['conceded'].append(match['FTAG'])
         
         team_history[away]['scored'].append(match['FTAG'])
         team_history[away]['conceded'].append(match['FTHG'])
+    
+    # Diagnostic output
+    print(f"\n📊 Training Data Statistics:")
+    print(f"  Total matches processed: {total_matches}")
+    print(f"  Training examples created: {training_examples_added}")
+    print(f"  Skipped (min history < 3): {skipped_min_history}")
+    print(f"  Data utilization: {100 * training_examples_added / total_matches:.1f}%")
+    print(f"  Unique teams tracked: {len(team_history)}")
+
             
     return np.array(X_list), np.array(y_outcome_list), np.array(y_home_list), np.array(y_away_list)
 
@@ -153,6 +197,13 @@ def train_and_validate():
     
     for train_index, test_index in tscv.split(X):
         print(f"\nFold {fold}/3")
+        
+        # ⚠️ TIME-SERIES SAFETY: Verify no training data from future
+        # This assertion ensures all training indices come before test indices
+        assert train_index.max() < test_index.min(), \
+            f"TIME-SERIES LEAKAGE DETECTED! Train max ({train_index.max()}) >= Test min ({test_index.min()})"
+        print(f"  ✅ Time-series integrity verified (train < test)")
+        
         X_train, X_test = X[train_index], X[test_index]
         y_out_train, y_out_test = y_outcome[train_index], y_outcome[test_index]
         y_home_train, y_home_test = y_home[train_index], y_home[test_index]

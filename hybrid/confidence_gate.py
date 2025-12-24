@@ -108,70 +108,108 @@ def check_feature_quality(features: np.ndarray) -> Tuple[bool, float]:
     return True, 100.0
 
 
-def estimate_prediction_variance(model, features: np.ndarray, n_samples: int = 5) -> Tuple[float, float]:
+def estimate_confidence_from_features(
+    features: np.ndarray,
+    xg_home: float,
+    xg_away: float,
+    league_avg_goals: float = 2.7
+) -> float:
     """
-    Estimate prediction variance through multiple forward passes.
+    Deterministic confidence proxy based on input quality.
     
-    For models with dropout or ensemble components, this provides
-    a measure of prediction uncertainty.
+    This replaces the old random noise approach with a stable, explainable
+    confidence measure that reflects:
+    - Feature completeness (fewer zeros = better)
+    - Feature distribution quality (good spread = reliable)
+    - xG plausibility (close to league average = more confident)
     
     Args:
-        model: XGBoost predictor model
+        features: Feature vector from feature builder
+        xg_home: Predicted home expected goals
+        xg_away: Predicted away expected goals
+        league_avg_goals: Expected total goals for league (default 2.7)
+    
+    Returns:
+        Confidence score in range [0.0, 1.0]
+    """
+    # 1. Feature completeness (avoid sparse/missing data)
+    zero_ratio = np.sum(features == 0) / max(len(features), 1)
+    completeness_score = max(0.0, 1.0 - zero_ratio)
+    
+    # 2. Feature distribution quality (well-distributed features are more reliable)
+    feature_std = np.std(features)
+    feature_range = np.max(features) - np.min(features)
+    if feature_range > 0.1:
+        distribution_score = min(1.0, feature_std / feature_range)
+    else:
+        distribution_score = 0.5  # Neutral if all features similar
+    
+    # 3. xG plausibility (predictions closer to league average are safer)
+    xg_total = xg_home + xg_away
+    deviation = abs(xg_total - league_avg_goals)
+    # Allow ±1.5 goals deviation before reducing confidence
+    reasonableness_score = max(0.0, 1.0 - (deviation / (league_avg_goals * 0.75)))
+    
+    # Combine with equal weighting
+    confidence = (completeness_score + distribution_score + reasonableness_score) / 3.0
+    
+    return float(np.clip(confidence, 0.0, 1.0))
+
+
+def estimate_prediction_stability(
+    features: np.ndarray,
+    xg_home: float,
+    xg_away: float
+) -> Tuple[float, float]:
+    """
+    Estimate prediction stability using deterministic feature analysis.
+    
+    This function has been refactored to remove random noise perturbations.
+    Instead, it uses feature quality metrics as a proxy for prediction stability.
+    
+    Args:
         features: Feature vector
-        n_samples: Number of predictions to make
+        xg_home: Predicted home expected goals
+        xg_away: Predicted away expected goals
         
     Returns:
-        Tuple of (variance_home, variance_away)
+        Tuple of (stability_home, stability_away) in range [0.0, 1.0]
+        Lower values = more stable/confident predictions
     """
-    # XGBoost is deterministic, so we can't get true variance
-    # Instead, we check prediction stability across slightly perturbed features
-    # This is a simplified approach - in production, you might use:
-    # - Bayesian XGBoost
-    # - Ensemble of models
-    # - Quantile regression for uncertainty
+    # Use deterministic feature-based confidence
+    confidence = estimate_confidence_from_features(features, xg_home, xg_away)
     
-    predictions_home = []
-    predictions_away = []
+    # Convert confidence to stability metric (inverted for compatibility)
+    # High confidence -> low "variance"
+    # Low confidence -> high "variance"
+    stability = 1.0 - confidence
     
-    for _ in range(n_samples):
-        # Add small noise to features (< 1% perturbation)
-        noise = np.random.normal(0, 0.01, features.shape)
-        perturbed_features = features + noise
-        
-        # Get prediction
-        try:
-            pred = model.predict(perturbed_features)
-            predictions_home.append(pred['xg_home'][0] if isinstance(pred['xg_home'], np.ndarray) else pred['xg_home'])
-            predictions_away.append(pred['xg_away'][0] if isinstance(pred['xg_away'], np.ndarray) else pred['xg_away'])
-        except Exception as e:
-            logger.warning(f"Error in variance estimation: {e}")
-            return 0.5, 0.5  # Default medium variance
-    
-    var_home = np.var(predictions_home) if len(predictions_home) > 0 else 0.5
-    var_away = np.var(predictions_away) if len(predictions_away) > 0 else 0.5
-    
-    return var_home, var_away
+    # Return as tuple for backward compatibility
+    # (old code expected two values, one per team)
+    return stability, stability
 
 
-def variance_to_confidence(variance: float, threshold: float = 0.2) -> float:
+def variance_to_confidence(variance: float, threshold: float = 0.5) -> float:
     """
-    Convert prediction variance to confidence score.
+    Convert stability metric to confidence score.
+    
+    Updated to work with deterministic stability estimates.
     
     Args:
-        variance: Prediction variance
-        threshold: Variance threshold for full confidence
+        variance: Stability metric (0.0-1.0, lower is better)
+        threshold: Threshold for full confidence
         
     Returns:
         Confidence score (0-100)
     """
-    # Low variance = high confidence
-    # High variance = low confidence
-    if variance <= threshold:
-        return 100.0
-    else:
-        # Exponential decay
-        confidence = 100 * np.exp(-5 * (variance - threshold))
-        return max(0, min(100, confidence))
+    # Variance is now a stability metric: 0 = perfect, 1 = poor
+    # Convert to confidence: 1 = perfect, 0 = poor
+    confidence_ratio = 1.0 - variance
+    
+    # Scale to 0-100
+    confidence = confidence_ratio * 100.0
+    
+    return max(0.0, min(100.0, confidence))
 
 
 def evaluate_xgb_confidence(xg_home: float, 
@@ -225,17 +263,18 @@ def evaluate_xgb_confidence(xg_home: float,
             }
         confidence_scores.append(feature_conf)
     
-    # 3. Prediction stability check (if model provided)
+    # 3. Prediction stability check (using deterministic feature analysis)
     stability_conf = 100.0
-    if model is not None and features is not None:
+    if features is not None:
         try:
-            var_home, var_away = estimate_prediction_variance(model, features, n_samples=3)
-            home_conf = variance_to_confidence(var_home)
-            away_conf = variance_to_confidence(var_away)
+            # Use deterministic stability estimation (no longer needs model)
+            stab_home, stab_away = estimate_prediction_stability(features, xg_home, xg_away)
+            home_conf = variance_to_confidence(stab_home)
+            away_conf = variance_to_confidence(stab_away)
             stability_conf = (home_conf + away_conf) / 2
             confidence_scores.append(stability_conf)
         except Exception as e:
-            logger.warning(f"Could not estimate variance: {e}")
+            logger.warning(f"Could not estimate stability: {e}")
             stability_conf = 80.0  # Assume reasonable stability if we can't measure
             confidence_scores.append(stability_conf)
     

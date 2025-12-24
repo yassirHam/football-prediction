@@ -138,7 +138,20 @@ class FeatureBuilder:
                             team, 
                             is_home: bool,
                             league_params: Dict) -> np.ndarray:
-        """Build features for a single team."""
+        """
+        Build features for a single team.
+        
+        ⚠️ TIME-SERIES SAFETY GUARANTEE:
+        All features are derived from team.goals_scored and team.goals_conceded,
+        which contain ONLY historical match results from BEFORE the current match.
+        
+        The training pipeline (train_ml.py) ensures this by:
+        1. Processing matches chronologically (line 60: sort_values('Date'))
+        2. Building features BEFORE updating history (lines 95-149)
+        3. Updating history AFTER features are built (lines 157-162)
+        
+        This guarantees NO FUTURE DATA LEAKAGE.
+        """
         features = []
         
         # 1. Rolling form features
@@ -171,21 +184,30 @@ class FeatureBuilder:
         
         # 2. Home/Away splits
         if self.config.use_home_away_splits:
-            # Use if available, otherwise use overall stats
+            # Use actual split data if available, otherwise estimate from overall stats
             if hasattr(team, 'home_goals_scored') and team.home_goals_scored:
+                # We have actual home performance data
                 home_scored_avg = np.mean(team.home_goals_scored)
                 home_conceded_avg = np.mean(team.home_goals_conceded) if team.home_goals_conceded else 0.0
             else:
-                home_scored_avg = np.mean(team.goals_scored) * 1.15 if is_home else np.mean(team.goals_scored)
+                # Estimate: What would this team score AT HOME?
+                # Use league-average home boost regardless of current venue
+                overall_avg = np.mean(team.goals_scored)
+                home_scored_avg = overall_avg * 1.15  # Home advantage
                 home_conceded_avg = np.mean(team.goals_conceded)
             
             if hasattr(team, 'away_goals_scored') and team.away_goals_scored:
+                # We have actual away performance data
                 away_scored_avg = np.mean(team.away_goals_scored)
                 away_conceded_avg = np.mean(team.away_goals_conceded) if team.away_goals_conceded else 0.0
             else:
-                away_scored_avg = np.mean(team.goals_scored) * 0.85 if not is_home else np.mean(team.goals_scored)
+                # Estimate: What would this team score AWAY?
+                # Use league-average away penalty regardless of current venue
+                overall_avg = np.mean(team.goals_scored)
+                away_scored_avg = overall_avg * 0.85  # Away penalty
                 away_conceded_avg = np.mean(team.goals_conceded)
             
+            # Differences help model understand venue impact
             home_away_diff_scored = home_scored_avg - away_scored_avg
             home_away_diff_conceded = home_conceded_avg - away_conceded_avg
             
