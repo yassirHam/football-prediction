@@ -21,6 +21,22 @@ prediction_history.json
 .DS_Store
 Thumbs.db
 
-# Note: We are TRACKING data/ folder as it contains the learned matches
-# If you want to ignore data, uncomment the line below:
-# data/
+# Generated Artifacts & Training Results
+archive/
+*results*.txt
+*comparison*.txt
+*training*.txt
+*validation*.txt
+*report*.txt
+learned_matches.csv
+
+# Keep data folder but ignore large datasets
+# data/*.csv (if needed, uncomment to ignore CSV files in data/)
+
+# ML Model Artifacts
+ml_models/*.pkl
+ml_models/model_artifacts/*.pkl
+
+# Logs folder
+logs/
+*.log
