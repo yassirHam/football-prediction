@@ -1,0 +1,12 @@
+# Daily Match List
+# Format: Home Team vs Away Team
+# One match per line
+
+Nottingham Forest vs Manchester City
+Arsenal vs Brighton
+Brentford vs Bournemouth
+Burnley vs Everton
+Liverpool vs Wolves
+West Ham vs Fulham
+Chelsea vs Aston Villa
+

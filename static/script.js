@@ -330,6 +330,82 @@ function displayResults(result) {
     if (result.decision_signal) {
         displayDecisionSignal(result.decision_signal);
     }
+
+    // Display First-Half Betting Decision (NEW)
+    if (result.first_half_betting_decision) {
+        displayBettingDecision(result.first_half_betting_decision);
+    }
+}
+
+function displayBettingDecision(decision_data) {
+    // Create a new card after first-half predictions or inject into existing section
+    const firstHalfCard = document.querySelector('#first-half-predictions').parentElement;
+
+    // Remove existing betting decision card if present
+    const existingCard = document.getElementById('betting-decision-card');
+    if (existingCard) existingCard.remove();
+
+    // Create new card
+    const card = document.createElement('div');
+    card.id = 'betting-decision-card';
+    card.className = 'prediction-card betting-decision-card';
+    card.style.animation = 'fadeInUp 0.4s ease-out';
+
+    const decision = decision_data.decision;
+    let colorClass, icon, title, subtitle;
+
+    if (decision === 'BET_TOP_2') {
+        colorClass = 'decision-top2';
+        icon = '🎯';
+        title = 'BET TOP-2';
+        subtitle = 'High Efficiency Zone';
+    } else if (decision === 'BET_TOP_3') {
+        colorClass = 'decision-top3';
+        icon = '📊';
+        title = 'BET TOP-3';
+        subtitle = 'High Coverage Zone';
+    } else {
+        colorClass = 'decision-pass';
+        icon = '⛔';
+        title = 'PASS';
+        subtitle = 'No Strong Signal';
+    }
+
+    card.innerHTML = `
+        <div class="betting-decision-header ${colorClass}">
+            <span class="betting-icon">${icon}</span>
+            <div>
+                <h3>${title}</h3>
+                <p class="betting-subtitle">${subtitle}</p>
+            </div>
+        </div>
+        <div class="betting-decision-body">
+            <div class="decision-metrics">
+                <div class="metric-item">
+                    <span class="metric-label">xG Total</span>
+                    <span class="metric-value">${decision_data.xG_total}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">xG Diff</span>
+                    <span class="metric-value">${decision_data.xG_diff}</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Top-2 Prob</span>
+                    <span class="metric-value">${decision_data.top2_prob_sum}%</span>
+                </div>
+                <div class="metric-item">
+                    <span class="metric-label">Top-3 Prob</span>
+                    <span class="metric-value">${decision_data.top3_prob_sum}%</span>
+                </div>
+            </div>
+            <div class="decision-reason">
+                <strong>Reasoning:</strong> ${decision_data.decision_reason}
+            </div>
+        </div>
+    `;
+
+    // Insert after first-half card
+    firstHalfCard.parentNode.insertBefore(card, firstHalfCard.nextSibling);
 }
 
 function displayDecisionSignal(signalData) {
@@ -1299,6 +1375,114 @@ function renderHistoryTable(history) {
         `;
         tbody.appendChild(row);
     });
+}
+
+// ---------------------------------------------------------
+// BATCH ANALYSIS LOGIC
+// ---------------------------------------------------------
+
+function toggleBatchMode() {
+    const section = document.getElementById('batch-analyzer-section');
+    const btn = document.getElementById('btn-batch');
+    const isHidden = section.style.display === 'none';
+
+    section.style.display = isHidden ? 'block' : 'none';
+    btn.classList.toggle('active', isHidden);
+}
+
+async function runBatchAnalysis() {
+    const input = document.getElementById('batch-input');
+    const text = input.value.trim();
+
+    if (!text) {
+        addFeedback('Please enter at least one match', true);
+        return;
+    }
+
+    // Show loading
+    const btn = document.querySelector('#batch-analyzer-section .btn-predict');
+    const btnText = btn.querySelector('.btn-text');
+    const spinner = btn.querySelector('.loading-spinner');
+
+    btnText.style.display = 'none';
+    spinner.style.display = 'inline';
+    btn.disabled = true;
+
+    try {
+        const response = await fetch('/api/batch_analyze', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ matches: text })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            displayBatchResults(result.results, result.stats);
+            addFeedback(`Analyzed ${result.stats.total_matches} matches!`);
+        } else {
+            addFeedback(result.error || 'Batch analysis failed', true);
+        }
+    } catch (error) {
+        console.error('Batch error:', error);
+        addFeedback('Network error during batch analysis', true);
+    } finally {
+        btnText.style.display = 'inline';
+        spinner.style.display = 'none';
+        btn.disabled = false;
+    }
+}
+
+function displayBatchResults(signals, stats) {
+    const container = document.getElementById('batch-results');
+    const list = document.getElementById('batch-list');
+    const statsDiv = document.getElementById('batch-stats');
+
+    container.style.display = 'block';
+
+    // Render Stats
+    statsDiv.innerHTML = `
+        <span class="stat-badge success">Top-2: ${stats.bet_top2_count}</span>
+        <span class="stat-badge warning">Top-3: ${stats.bet_top3_count}</span>
+        <span class="stat-badge neutral">Pass: ${stats.pass_count}</span>
+    `;
+
+    // Render List
+    list.innerHTML = '';
+
+    if (signals.length === 0) {
+        list.innerHTML = '<div class="no-signals">No betting signals found in this batch.</div>';
+        return;
+    }
+
+    signals.forEach((signal, idx) => {
+        const card = document.createElement('div');
+        card.className = `batch-card ${signal.decision === 'BET_TOP_2' ? 'border-top2' : 'border-top3'}`;
+        card.style.animation = `fadeInUp 0.4s ease-out ${idx * 0.1}s both`;
+
+        card.innerHTML = `
+            <div class="batch-header">
+                <strong>${signal.match}</strong>
+                <span class="decision-badge ${signal.decision === 'BET_TOP_2' ? 'badge-top2' : 'badge-top3'}">${signal.decision.replace('_', ' ')}</span>
+            </div>
+            <div class="batch-body">
+                <div class="batch-probs">
+                    <span class="prob-tag">${signal.top_predictions[0]} (${signal.probabilities[0]}%)</span>
+                    <span class="prob-tag">${signal.top_predictions[1]} (${signal.probabilities[1]}%)</span>
+                    <span class="prob-tag">${signal.top_predictions[2]} (${signal.probabilities[2]}%)</span>
+                </div>
+                <div class="batch-metrics">
+                    <span>xG Diff: <strong>${signal.xG_diff}</strong></span>
+                    <span>Conf: <strong>${signal.confidence_score.toFixed(1)}</strong></span>
+                </div>
+                <div class="batch-reason">${signal.reason}</div>
+            </div>
+        `;
+        list.appendChild(card);
+    });
+
+    // Scroll to results
+    container.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Initialize

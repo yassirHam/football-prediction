@@ -1,0 +1,36 @@
+{
+  "date": "2025-12-27",
+  "time_generated": "2025-12-27 01:19:09",
+  "total_matches_analyzed": 1,
+  "betting_opportunities": 1,
+  "pass_count": 0,
+  "failed_lookups": 0,
+  "summary": {
+    "bet_top2_count": 1,
+    "bet_top3_count": 0,
+    "signal_rate": 100.0
+  },
+  "signals": [
+    {
+      "match": "Udinese vs Lazio",
+      "decision": "BET_TOP_2",
+      "top_predictions": [
+        "0-0",
+        "1-0",
+        "2-0"
+      ],
+      "probabilities": [
+        73.8,
+        22.4,
+        3.4
+      ],
+      "xG_total": 1.61,
+      "xG_diff": 0.13,
+      "top2_prob_sum": 9620.0,
+      "top3_prob_sum": 9960.0,
+      "reason": "High efficiency: Low variance with strong Top-2 concentration",
+      "confidence_score": 35.1,
+      "prediction_source": "poisson"
+    }
+  ]
+}

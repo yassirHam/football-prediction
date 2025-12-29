@@ -1,0 +1,108 @@
+C:\Users\yassi\.gemini\antigravity\scratch\football-prediction\team_data_lookup.py:53: DtypeWarning: Columns (0,2,7,10,156) have mixed types. Specify dtype option on import or set low_memory=False.
+  df = pd.read_csv(combined_file)
+2025-12-27 00:23:51,769 - hybrid.hybrid_predictor - INFO - ✅ XGBoost model loaded successfully
+2025-12-27 00:23:51,773 - hybrid.hybrid_predictor - INFO - Using XGBoost xG: (2.54, 0.75) [confidence: 32.1%]
+2025-12-27 00:23:51,794 - hybrid.hybrid_predictor - INFO - Using XGBoost xG: (2.62, 1.10) [confidence: 34.8%]
+2025-12-27 00:23:51,815 - hybrid.confidence_gate - INFO - [FALLBACK] Using Poisson xG (XGBoost confidence: 22.3%)
+2025-12-27 00:23:51,815 - hybrid.hybrid_predictor - WARNING - [FALLBACK] Using Poisson xG. Reason: Confidence 22.3% below threshold 25%
+2025-12-27 00:23:51,865 - hybrid.confidence_gate - INFO - [FALLBACK] Using Poisson xG (XGBoost confidence: 24.7%)
+2025-12-27 00:23:51,866 - hybrid.hybrid_predictor - WARNING - [FALLBACK] Using Poisson xG. Reason: Confidence 24.7% below threshold 25%
+2025-12-27 00:23:51,894 - hybrid.hybrid_predictor - INFO - Using XGBoost xG: (1.73, 1.37) [confidence: 31.0%]
+2025-12-27 00:23:51,917 - hybrid.hybrid_predictor - INFO - Using XGBoost xG: (1.85, 1.03) [confidence: 28.7%]
+✅ Loaded league-specific parameters for 56 leagues
+   Global fallback: AVG=1.387, HOME=1.146, AWAY=0.854
+✅ Using HYBRID prediction pipeline (Sync with Web App)
+📋 Parsed 7 matches from daily_matches.txt
+
+============================================================
+🔍 ANALYZING 7 MATCHES
+   (DEBUG MODE ENABLED)
+============================================================
+
+📂 Loading historical data from data\combined_training_data.csv...
+✅ Loaded 21,886 historical matches
+⚠️  Insufficient home matches for Nottingham Forest (0/5). looking for mixed venue as fallback.
+⚠️  Warning: Only found 0 matches with HT data for 'Nottingham Forest' (requested 5)
+⚠️  Insufficient data for Nottingham Forest: only 0 matches found
+⚠️  Insufficient away matches for Manchester City (0/5). looking for mixed venue as fallback.
+⚠️  Warning: Only found 0 matches with HT data for 'Manchester City' (requested 5)
+⚠️  Insufficient data for Manchester City: only 0 matches found
+❌ Skipping Nottingham Forest vs Manchester City: Insufficient historical data
+Models loaded from ml_models\model_artifacts
+
+🔍 DEBUG: Arsenal vs Brighton
+   Src: XGBOOST | Conf: 50.0
+   xG: 3.29 (Home: 2.54, Away: 0.75)
+   Decision: BET_TOP_3
+
+🔍 DEBUG: Brentford vs Bournemouth
+   Src: XGBOOST | Conf: 48.8
+   xG: 3.71 (Home: 2.62, Away: 1.10)
+   Decision: BET_TOP_3
+
+🔍 DEBUG: Burnley vs Everton
+   Src: POISSON | Conf: 43.8
+   xG: 2.13 (Home: 1.25, Away: 0.88)
+   Decision: BET_TOP_3
+
+🔍 DEBUG: Liverpool vs Wolves
+   Src: POISSON | Conf: 40.2
+   xG: 2.68 (Home: 1.95, Away: 0.73)
+   Decision: BET_TOP_3
+
+🔍 DEBUG: West Ham vs Fulham
+   Src: XGBOOST | Conf: 54.2
+   xG: 3.1 (Home: 1.73, Away: 1.37)
+   Decision: PASS
+
+🔍 DEBUG: Chelsea vs Aston Villa
+   Src: XGBOOST | Conf: 58.8
+   xG: 2.87 (Home: 1.85, Away: 1.03)
+   Decision: PASS
+
+============================================================
+✅ OUTPUT GENERATED
+============================================================
+📊 Total Matches Analyzed: 7
+🎯 Betting Opportunities: 4
+   - BET_TOP_2: 0
+   - BET_TOP_3: 4
+⏸️  Pass: 2
+❌ Failed Lookups: 1
+
+📁 Output saved to: daily_betting_signals.json
+============================================================
+
+
+============================================================
+🎯 BETTING SIGNALS (4)
+============================================================
+
+1. Arsenal vs Brighton
+   Decision: BET_TOP_3
+   Top Predictions: 0-0, 1-0, 2-0
+   Probabilities: [34.5, 33.8, 17.5]
+   xG Total: 3.29 | xG Diff: 1.79
+   Reason: High coverage: Defensive/imbalanced match with strong Top-3 concentration
+
+2. Brentford vs Bournemouth
+   Decision: BET_TOP_3
+   Top Predictions: 0-0, 0-1, 1-0
+   Probabilities: [43.3, 24.2, 15.2]
+   xG Total: 3.71 | xG Diff: 1.52
+   Reason: High coverage: Defensive/imbalanced match with strong Top-3 concentration
+
+3. Burnley vs Everton
+   Decision: BET_TOP_3
+   Top Predictions: 0-0, 1-0, 0-1
+   Probabilities: [38.7, 22.6, 18.4]
+   xG Total: 2.13 | xG Diff: 0.37
+   Reason: High coverage: Defensive/imbalanced match with strong Top-3 concentration
+
+4. Liverpool vs Wolves
+   Decision: BET_TOP_3
+   Top Predictions: 0-0, 1-0, 2-0
+   Probabilities: [49.7, 34.8, 12.2]
+   xG Total: 2.68 | xG Diff: 1.21
+   Reason: High coverage: Defensive/imbalanced match with strong Top-3 concentration
+

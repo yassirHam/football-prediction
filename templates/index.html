@@ -27,470 +27,496 @@
         <!-- Main Form -->
         <div class="form-container">
             <!-- Match Type Toggle -->
-            <div class="match-type-toggle">
-                <button class="type-btn active" id="btn-league" onclick="setMatchType('league')">🏆 League
-                    Match</button>
-                <button class="type-btn" id="btn-cup" onclick="setMatchType('cup')">🌍 Cup / International</button>
+            <button class="type-btn active" id="btn-league" onclick="setMatchType('league')">🏆 League Match</button>
+            <button class="type-btn" id="btn-cup" onclick="setMatchType('cup')">🌍 Cup / International</button>
+            <button class="type-btn" id="btn-batch" onclick="toggleBatchMode()">📋 Batch Analyzer</button>
+        </div>
+
+        <!-- Batch Analyzer Section -->
+        <div id="batch-analyzer-section" style="display: none;">
+            <div class="form-group">
+                <label>Paste Match List (Home vs Away)</label>
+                <textarea id="batch-input" placeholder="Arsenal vs Brighton&#10;Liverpool vs Wolves" rows="6"
+                    class="batch-input"></textarea>
+                <p class="input-hint">One match per line. Format: "Home Team vs Away Team"</p>
             </div>
-
-            <!-- Tournament Context (New Premium UI) -->
-            <div id="tournament-context" class="tournament-context" style="display: none;">
-                <div class="context-title">🏆 Tournament Settings</div>
-
-                <!-- Hidden Inputs for Logic Compatibility -->
-                <input type="hidden" id="comp-type" value="CLUB_CUP">
-                <input type="hidden" id="tournament-stage" value="GROUP">
-
-                <!-- Competition Cards -->
-                <div class="comp-type-grid">
-                    <div class="comp-card active" id="card-CLUB_CUP" onclick="selectCompType('CLUB_CUP')">
-                        <div class="comp-icon">🏆</div>
-                        <div class="comp-name">Club Cup</div>
-                        <div class="comp-desc">Champions League, FA Cup, etc.</div>
-                    </div>
-                    <div class="comp-card" id="card-INTERNATIONAL" onclick="selectCompType('INTERNATIONAL')">
-                        <div class="comp-icon">🌍</div>
-                        <div class="comp-name">International</div>
-                        <div class="comp-desc">World Cup, Euros (uses FIFA ranks)</div>
-                    </div>
-                </div>
-
-                <!-- Stage Timeline -->
-                <div class="context-title">📅 Tournament Stage</div>
-                <div class="stage-timeline">
-                    <div class="stage-node active" id="stage-GROUP" onclick="selectStage('GROUP')" title="Group Stage">
-                        <div class="stage-icon">G</div>
-                        <span class="stage-label">Group</span>
-                    </div>
-                    <div class="stage-node" id="stage-R16" onclick="selectStage('R16')" title="Round of 16">
-                        <div class="stage-icon">16</div>
-                        <span class="stage-label">R16</span>
-                    </div>
-                    <div class="stage-node" id="stage-QUARTER" onclick="selectStage('QUARTER')" title="Quarter-Finals">
-                        <div class="stage-icon">QF</div>
-                        <span class="stage-label">Quarters</span>
-                    </div>
-                    <div class="stage-node" id="stage-SEMI" onclick="selectStage('SEMI')" title="Semi-Finals">
-                        <div class="stage-icon">SF</div>
-                        <span class="stage-label">Semis</span>
-                    </div>
-                    <div class="stage-node" id="stage-FINAL" onclick="selectStage('FINAL')" title="Final">
-                        <div class="stage-icon">🏆</div>
-                        <span class="stage-label">Final</span>
-                    </div>
-                </div>
-
-                <div id="fifa-ranking-section" class="fifa-ranking-section" style="display: none;">
-                    <p class="info-text">ℹ️ For international matches, provide FIFA rankings instead of league positions
-                    </p>
-                    <div class="ranking-grid">
-                        <div class="form-group">
-                            <label for="home-fifa">Home Team FIFA Ranking</label>
-                            <input type="number" id="home-fifa" placeholder="#" min="1" max="210" class="fifa-input">
-                        </div>
-                        <div class="form-group">
-                            <label for="away-fifa">Away Team FIFA Ranking</label>
-                            <input type="number" id="away-fifa" placeholder="#" min="1" max="210" class="fifa-input">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="teams-grid">
-                <!-- Home Team -->
-                <div class="team-card home">
-                    <h2>🏠 Home Team</h2>
-                    <div class="form-group">
-                        <label for="home-name">Team Name</label>
-                        <div class="input-row">
-                            <input type="text" id="home-name" placeholder="Team Name" required>
-                            <input type="number" id="home-pos" placeholder="Rank" min="1" class="rank-input rank-pos"
-                                title="Position">
-                            <span class="rank-separator">/</span>
-                            <input type="number" id="home-total" placeholder="Total" min="2" value="20"
-                                class="rank-input rank-total" title="Total Teams">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Goals Scored (Last 5 Matches)</label>
-                        <div class="match-inputs">
-                            <input type="number" class="match-input" id="home-scored-1" placeholder="Most recent"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="home-scored-2" placeholder="Match 2" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="home-scored-3" placeholder="Match 3" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="home-scored-4" placeholder="Match 4" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="home-scored-5" placeholder="Oldest" min="0"
-                                max="10" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Goals Conceded (Last 5 Matches)</label>
-                        <div class="match-inputs">
-                            <input type="number" class="match-input" id="home-conceded-1" placeholder="Most recent"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="home-conceded-2" placeholder="Match 2" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="home-conceded-3" placeholder="Match 3" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="home-conceded-4" placeholder="Match 4" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="home-conceded-5" placeholder="Oldest" min="0"
-                                max="10" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>First Half Goals (Last 5 Matches)</label>
-                        <div class="match-inputs">
-                            <input type="number" class="match-input" id="home-first-half-1" placeholder="Most recent"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="home-first-half-2" placeholder="Match 2"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="home-first-half-3" placeholder="Match 3"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="home-first-half-4" placeholder="Match 4"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="home-first-half-5" placeholder="Oldest" min="0"
-                                max="10" required>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- VS Separator -->
-                <div class="vs-separator">
-                    <span class="vs-text">VS</span>
-                </div>
-
-                <!-- Away Team -->
-                <div class="team-card away">
-                    <h2>✈️ Away Team</h2>
-                    <div class="form-group">
-                        <label for="away-name">Team Name</label>
-                        <div class="input-row">
-                            <input type="text" id="away-name" placeholder="Team Name" required>
-                            <input type="number" id="away-pos" placeholder="Rank" min="1" class="rank-input rank-pos"
-                                title="Position">
-                            <span class="rank-separator">/</span>
-                            <input type="number" id="away-total" placeholder="Total" min="2" value="20"
-                                class="rank-input rank-total" title="Total Teams">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Goals Scored (Last 5 Matches)</label>
-                        <div class="match-inputs">
-                            <input type="number" class="match-input" id="away-scored-1" placeholder="Most recent"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="away-scored-2" placeholder="Match 2" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="away-scored-3" placeholder="Match 3" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="away-scored-4" placeholder="Match 4" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="away-scored-5" placeholder="Oldest" min="0"
-                                max="10" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Goals Conceded (Last 5 Matches)</label>
-                        <div class="match-inputs">
-                            <input type="number" class="match-input" id="away-conceded-1" placeholder="Most recent"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="away-conceded-2" placeholder="Match 2" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="away-conceded-3" placeholder="Match 3" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="away-conceded-4" placeholder="Match 4" min="0"
-                                max="10" required>
-                            <input type="number" class="match-input" id="away-conceded-5" placeholder="Oldest" min="0"
-                                max="10" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>First Half Goals (Last 5 Matches)</label>
-                        <div class="match-inputs">
-                            <input type="number" class="match-input" id="away-first-half-1" placeholder="Most recent"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="away-first-half-2" placeholder="Match 2"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="away-first-half-3" placeholder="Match 3"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="away-first-half-4" placeholder="Match 4"
-                                min="0" max="10" required>
-                            <input type="number" class="match-input" id="away-first-half-5" placeholder="Oldest" min="0"
-                                max="10" required>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Neutral Venue Option -->
-            <div class="neutral-venue-container">
-                <label class="neutral-venue-label">
-                    <input type="checkbox" id="neutral-venue" class="neutral-checkbox">
-                    <span class="neutral-text">
-                        ⚽ Neutral Venue (No Home Advantage)
-                        <span class="neutral-hint">Check this if both teams are playing in a neutral country</span>
-                    </span>
-                </label>
-            </div>
-
-            <!-- Predict Button -->
-            <button class="btn-predict" onclick="getPrediction()">
-                <span class="btn-text">Get Prediction</span>
+            <button class="btn-predict" onclick="runBatchAnalysis()">
+                <span class="btn-text">Run Batch Analysis</span>
                 <span class="loading-spinner" style="display: none;">⌛</span>
             </button>
         </div>
 
-        <!-- Results Section -->
-        <div id="results" class="results-container" style="display: none;">
-            <div class="results-header">
-                <h2 id="match-title"></h2>
+        <!-- Tournament Context (New Premium UI) -->
+        <div id="tournament-context" class="tournament-context" style="display: none;">
+            <div class="context-title">🏆 Tournament Settings</div>
 
-                <!-- Hybrid Metadata Badge (NEW) -->
-                <div class="hybrid-badge" id="hybrid-badge" style="display: none;">
-                    <span class="badge-label">Prediction Model:</span>
-                    <span class="badge-source" id="badge-source"></span>
-                    <span class="badge-confidence" id="badge-confidence"></span>
+            <!-- Hidden Inputs for Logic Compatibility -->
+            <input type="hidden" id="comp-type" value="CLUB_CUP">
+            <input type="hidden" id="tournament-stage" value="GROUP">
+
+            <!-- Competition Cards -->
+            <div class="comp-type-grid">
+                <div class="comp-card active" id="card-CLUB_CUP" onclick="selectCompType('CLUB_CUP')">
+                    <div class="comp-icon">🏆</div>
+                    <div class="comp-name">Club Cup</div>
+                    <div class="comp-desc">Champions League, FA Cup, etc.</div>
                 </div>
-
-                <!-- Decision Signal Card (NEW) -->
-                <div class="decision-card-container" id="decision-card" style="display: none;">
-                    <!-- Content injected by JS -->
-                </div>
-
-                <div class="xg-display">
-                    <div class="xg-item">
-                        <span class="xg-label" id="home-xg-label"></span>
-                        <span class="xg-value" id="home-xg"></span>
-                    </div>
-                    <div class="xg-separator">xG</div>
-                    <div class="xg-item">
-                        <span class="xg-value" id="away-xg"></span>
-                        <span class="xg-label" id="away-xg-label"></span>
-                    </div>
+                <div class="comp-card" id="card-INTERNATIONAL" onclick="selectCompType('INTERNATIONAL')">
+                    <div class="comp-icon">🌍</div>
+                    <div class="comp-name">International</div>
+                    <div class="comp-desc">World Cup, Euros (uses FIFA ranks)</div>
                 </div>
             </div>
 
-            <!-- Match Outcome Probabilities -->
-            <div class="outcome-section">
-                <div class="outcome-card win-card">
-                    <div class="outcome-label" id="outcome-win-label">Home Win</div>
-                    <div class="outcome-value" id="outcome-win">-</div>
+            <!-- Stage Timeline -->
+            <div class="context-title">📅 Tournament Stage</div>
+            <div class="stage-timeline">
+                <div class="stage-node active" id="stage-GROUP" onclick="selectStage('GROUP')" title="Group Stage">
+                    <div class="stage-icon">G</div>
+                    <span class="stage-label">Group</span>
                 </div>
-                <div class="outcome-card draw-card">
-                    <div class="outcome-label">Draw</div>
-                    <div class="outcome-value" id="outcome-draw">-</div>
+                <div class="stage-node" id="stage-R16" onclick="selectStage('R16')" title="Round of 16">
+                    <div class="stage-icon">16</div>
+                    <span class="stage-label">R16</span>
                 </div>
-                <div class="outcome-card loss-card">
-                    <div class="outcome-label" id="outcome-loss-label">Away Win</div>
-                    <div class="outcome-value" id="outcome-loss">-</div>
+                <div class="stage-node" id="stage-QUARTER" onclick="selectStage('QUARTER')" title="Quarter-Finals">
+                    <div class="stage-icon">QF</div>
+                    <span class="stage-label">Quarters</span>
                 </div>
-            </div>
-
-            <!-- Enhanced Confidence Score -->
-            <div class="confidence-container">
-                <h3> Prediction Confidence</h3>
-                <div class="confidence-display">
-                    <div class="confidence-gauge">
-                        <div class="gauge-fill" id="confidence-gauge-fill"></div>
-                        <div class="gauge-value" id="confidence-value">-</div>
-                    </div>
-                    <div class="confidence-details" id="confidence-breakdown"></div>
+                <div class="stage-node" id="stage-SEMI" onclick="selectStage('SEMI')" title="Semi-Finals">
+                    <div class="stage-icon">SF</div>
+                    <span class="stage-label">Semis</span>
+                </div>
+                <div class="stage-node" id="stage-FINAL" onclick="selectStage('FINAL')" title="Final">
+                    <div class="stage-icon">🏆</div>
+                    <span class="stage-label">Final</span>
                 </div>
             </div>
 
-            <div class="predictions-grid">
-                <!-- First Half -->
-                <div class="prediction-card">
-                    <h3>⏱ First Half Predictions</h3>
-                    <div id="first-half-predictions"></div>
-                </div>
-
-                <!-- Full Match -->
-                <div class="prediction-card">
-                    <h3> Full Match Predictions</h3>
-                    <div id="full-match-predictions"></div>
-                </div>
-
-                <!-- Betting Insights (New) -->
-                <div class="prediction-card">
-                    <h3> Betting Insights</h3>
-                    <div id="betting-insights"></div>
-                </div>
-
-                <!-- Prediction Intervals -->
-                <div class="prediction-card">
-                    <h3> Expected Goal Ranges (90% Conf)</h3>
-                    <div id="prediction-intervals"></div>
-                </div>
-
-                <!-- Team Momentum -->
-                <div class="prediction-card">
-                    <h3> Team Momentum</h3>
-                    <div id="team-momentum"></div>
-                </div>
-
-                <!-- Total Goals -->
-                <div class="prediction-card">
-                    <h3>Total Goals</h3>
-                    <div id="total-goals-predictions"></div>
-                </div>
-
-                <!-- Insights -->
-                <div class="prediction-card">
-                    <h3> Match Insights</h3>
-                    <div id="insights"></div>
-                </div>
-
-                <!-- Model Quality -->
-                <div class="prediction-card">
-                    <h3> Model Quality</h3>
-                    <div id="model-quality"></div>
-                </div>
-
-                <!-- Both Teams to Score -->
-                <div class="prediction-card">
-                    <h3>Both Teams to Score</h3>
-                    <div id="both-teams-score"></div>
-                </div>
-
-                <!-- Clean Sheets -->
-                <div class="prediction-card">
-                    <h3> Clean Sheet Probability</h3>
-                    <div id="clean-sheets"></div>
-                </div>
-            </div>
-
-            <!-- Feedback / Retraining Section -->
-            <div class="feedback-section">
-                <div class="feedback-header">
-                    <h2>📚 Teach the Model</h2>
-                    <p>Match finished? Enter the real scores to help the model learn!</p>
-                </div>
-                <div class="feedback-controls">
-                    <!-- Half-Time Scores -->
-                    <div class="score-section">
-                        <h3 class="score-section-title">⏱ Half-Time Score</h3>
-                        <div class="score-row">
-                            <div class="score-input-group">
-                                <label>Home HT</label>
-                                <input type="number" id="ht-home-goals" min="0" placeholder="0">
-                            </div>
-                            <span class="score-separator">-</span>
-                            <div class="score-input-group">
-                                <label>Away HT</label>
-                                <input type="number" id="ht-away-goals" min="0" placeholder="0">
-                            </div>
-                        </div>
+            <div id="fifa-ranking-section" class="fifa-ranking-section" style="display: none;">
+                <p class="info-text">ℹ️ For international matches, provide FIFA rankings instead of league positions
+                </p>
+                <div class="ranking-grid">
+                    <div class="form-group">
+                        <label for="home-fifa">Home Team FIFA Ranking</label>
+                        <input type="number" id="home-fifa" placeholder="#" min="1" max="210" class="fifa-input">
                     </div>
-
-                    <!-- Full-Time Scores -->
-                    <div class="score-section">
-                        <h3 class="score-section-title">⚽ Full-Time Score</h3>
-                        <div class="score-row">
-                            <div class="score-input-group">
-                                <label>Home FT</label>
-                                <input type="number" id="real-home-goals" min="0" placeholder="0">
-                            </div>
-                            <span class="score-separator">-</span>
-                            <div class="score-input-group">
-                                <label>Away FT</label>
-                                <input type="number" id="real-away-goals" min="0" placeholder="0">
-                            </div>
-                        </div>
+                    <div class="form-group">
+                        <label for="away-fifa">Away Team FIFA Ranking</label>
+                        <input type="number" id="away-fifa" placeholder="#" min="1" max="210" class="fifa-input">
                     </div>
-
-                    <button class="btn-feedback" onclick="submitFeedback()">✅ Submit & Learn</button>
-                </div>
-                <div id="feedback-message" class="feedback-message"></div>
-            </div>
-
-            <!-- Smart Calculator Section -->
-            <div class="calculator-section">
-                <div class="calculator-header">
-                    <h2> Smart Betting Calculator</h2>
-                    <p>Calculate optimal stakes for guaranteed profits or maximizing returns</p>
-                </div>
-
-                <div class="calculator-controls">
-                    <div class="calc-mode-switch">
-                        <button class="mode-btn active" onclick="setCalcMode('budget', this)">💰 Maximize
-                            Budget</button>
-                        <button class="mode-btn" onclick="setCalcMode('profit', this)">🎯 Target Profit</button>
-                    </div>
-
-                    <div class="input-group">
-                        <label id="amount-label">Total Budget ($)</label>
-                        <input type="number" id="calc-amount" value="100" min="1">
-                    </div>
-                </div>
-
-                <!-- Quick Market Presets -->
-                <div class="calc-presets">
-                    <span class="preset-label">Quick Markets:</span>
-                    <button class="btn-preset" onclick="loadPreset('1x2')">Match Winner</button>
-                    <button class="btn-preset" onclick="loadPreset('cs_ft')">FT Correct Score</button>
-                    <button class="btn-preset" onclick="loadPreset('cs_ht')">HT Correct Score</button>
-                    <button class="btn-preset" onclick="loadPreset('ou')">Over/Under</button>
-                    <button class="btn-preset btn-clear" onclick="clearCalculator()">🗑️ Clear All</button>
-                </div>
-
-                <div class="odds-inputs" id="odds-rows">
-                    <!-- Dynamic rows will look like this -->
-                    <div class="odds-row">
-                        <input type="text" placeholder="Option A (e.g. Home Win)" class="calc-name">
-                        <input type="number" placeholder="Odds (e.g. 2.50)" class="calc-odd" step="0.01">
-                        <button class="btn-remove" onclick="removeRow(this)">×</button>
-                    </div>
-                    <div class="odds-row">
-                        <input type="text" placeholder="Option B (e.g. Draw)" class="calc-name">
-                        <input type="number" placeholder="Odds (e.g. 3.20)" class="calc-odd" step="0.01">
-                        <button class="btn-remove" onclick="removeRow(this)">×</button>
-                    </div>
-                </div>
-
-                <div class="calc-actions">
-                    <button class="btn-secondary" onclick="addOddRow()">+ Add Option</button>
-                    <button class="btn-primary" onclick="calculateStakes()">Calculate Stakes</button>
-                </div>
-
-                <div id="calc-results" class="calc-results hidden">
-                    <!-- Results will be injected here -->
-                </div>
-            </div>
-        </div>
-        <!-- History Modal -->
-        <div id="history-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="toggleHistoryModal()">&times;</span>
-                <h2>📜 Prediction History</h2>
-                <div class="history-table-container">
-                    <table class="history-table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Match</th>
-                                <th>Ranks</th>
-                                <th>Result</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-list">
-                            <!-- History items will be injected here -->
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </div>
 
-        <script src="{{ url_for('static', filename='script.js') }}?v=5"></script>
+        <div class="teams-grid">
+            <!-- Home Team -->
+            <div class="team-card home">
+                <h2>🏠 Home Team</h2>
+                <div class="form-group">
+                    <label for="home-name">Team Name</label>
+                    <div class="input-row">
+                        <input type="text" id="home-name" placeholder="Team Name" required>
+                        <input type="number" id="home-pos" placeholder="Rank" min="1" class="rank-input rank-pos"
+                            title="Position">
+                        <span class="rank-separator">/</span>
+                        <input type="number" id="home-total" placeholder="Total" min="2" value="20"
+                            class="rank-input rank-total" title="Total Teams">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Goals Scored (Last 5 Matches)</label>
+                    <div class="match-inputs">
+                        <input type="number" class="match-input" id="home-scored-1" placeholder="Most recent" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-scored-2" placeholder="Match 2" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-scored-3" placeholder="Match 3" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-scored-4" placeholder="Match 4" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-scored-5" placeholder="Oldest" min="0"
+                            max="10" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Goals Conceded (Last 5 Matches)</label>
+                    <div class="match-inputs">
+                        <input type="number" class="match-input" id="home-conceded-1" placeholder="Most recent" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-conceded-2" placeholder="Match 2" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-conceded-3" placeholder="Match 3" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-conceded-4" placeholder="Match 4" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-conceded-5" placeholder="Oldest" min="0"
+                            max="10" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>First Half Goals (Last 5 Matches)</label>
+                    <div class="match-inputs">
+                        <input type="number" class="match-input" id="home-first-half-1" placeholder="Most recent"
+                            min="0" max="10" required>
+                        <input type="number" class="match-input" id="home-first-half-2" placeholder="Match 2" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-first-half-3" placeholder="Match 3" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-first-half-4" placeholder="Match 4" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="home-first-half-5" placeholder="Oldest" min="0"
+                            max="10" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VS Separator -->
+            <div class="vs-separator">
+                <span class="vs-text">VS</span>
+            </div>
+
+            <!-- Away Team -->
+            <div class="team-card away">
+                <h2>✈️ Away Team</h2>
+                <div class="form-group">
+                    <label for="away-name">Team Name</label>
+                    <div class="input-row">
+                        <input type="text" id="away-name" placeholder="Team Name" required>
+                        <input type="number" id="away-pos" placeholder="Rank" min="1" class="rank-input rank-pos"
+                            title="Position">
+                        <span class="rank-separator">/</span>
+                        <input type="number" id="away-total" placeholder="Total" min="2" value="20"
+                            class="rank-input rank-total" title="Total Teams">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Goals Scored (Last 5 Matches)</label>
+                    <div class="match-inputs">
+                        <input type="number" class="match-input" id="away-scored-1" placeholder="Most recent" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-scored-2" placeholder="Match 2" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-scored-3" placeholder="Match 3" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-scored-4" placeholder="Match 4" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-scored-5" placeholder="Oldest" min="0"
+                            max="10" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Goals Conceded (Last 5 Matches)</label>
+                    <div class="match-inputs">
+                        <input type="number" class="match-input" id="away-conceded-1" placeholder="Most recent" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-conceded-2" placeholder="Match 2" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-conceded-3" placeholder="Match 3" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-conceded-4" placeholder="Match 4" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-conceded-5" placeholder="Oldest" min="0"
+                            max="10" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>First Half Goals (Last 5 Matches)</label>
+                    <div class="match-inputs">
+                        <input type="number" class="match-input" id="away-first-half-1" placeholder="Most recent"
+                            min="0" max="10" required>
+                        <input type="number" class="match-input" id="away-first-half-2" placeholder="Match 2" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-first-half-3" placeholder="Match 3" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-first-half-4" placeholder="Match 4" min="0"
+                            max="10" required>
+                        <input type="number" class="match-input" id="away-first-half-5" placeholder="Oldest" min="0"
+                            max="10" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neutral Venue Option -->
+        <div class="neutral-venue-container">
+            <label class="neutral-venue-label">
+                <input type="checkbox" id="neutral-venue" class="neutral-checkbox">
+                <span class="neutral-text">
+                    ⚽ Neutral Venue (No Home Advantage)
+                    <span class="neutral-hint">Check this if both teams are playing in a neutral country</span>
+                </span>
+            </label>
+        </div>
+
+        <!-- Predict Button -->
+        <button class="btn-predict" onclick="getPrediction()">
+            <span class="btn-text">Get Prediction</span>
+            <span class="loading-spinner" style="display: none;">⌛</span>
+        </button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results" class="results-container" style="display: none;">
+        <div class="results-header">
+            <h2 id="match-title"></h2>
+
+            <!-- Hybrid Metadata Badge (NEW) -->
+            <div class="hybrid-badge" id="hybrid-badge" style="display: none;">
+                <span class="badge-label">Prediction Model:</span>
+                <span class="badge-source" id="badge-source"></span>
+                <span class="badge-confidence" id="badge-confidence"></span>
+            </div>
+
+            <!-- Decision Signal Card (NEW) -->
+            <div class="decision-card-container" id="decision-card" style="display: none;">
+                <!-- Content injected by JS -->
+            </div>
+
+            <div class="xg-display">
+                <div class="xg-item">
+                    <span class="xg-label" id="home-xg-label"></span>
+                    <span class="xg-value" id="home-xg"></span>
+                </div>
+                <div class="xg-separator">xG</div>
+                <div class="xg-item">
+                    <span class="xg-value" id="away-xg"></span>
+                    <span class="xg-label" id="away-xg-label"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Match Outcome Probabilities -->
+        <div class="outcome-section">
+            <div class="outcome-card win-card">
+                <div class="outcome-label" id="outcome-win-label">Home Win</div>
+                <div class="outcome-value" id="outcome-win">-</div>
+            </div>
+            <div class="outcome-card draw-card">
+                <div class="outcome-label">Draw</div>
+                <div class="outcome-value" id="outcome-draw">-</div>
+            </div>
+            <div class="outcome-card loss-card">
+                <div class="outcome-label" id="outcome-loss-label">Away Win</div>
+                <div class="outcome-value" id="outcome-loss">-</div>
+            </div>
+        </div>
+
+        <!-- Enhanced Confidence Score -->
+        <div class="confidence-container">
+            <h3> Prediction Confidence</h3>
+            <div class="confidence-display">
+                <div class="confidence-gauge">
+                    <div class="gauge-fill" id="confidence-gauge-fill"></div>
+                    <div class="gauge-value" id="confidence-value">-</div>
+                </div>
+                <div class="confidence-details" id="confidence-breakdown"></div>
+            </div>
+        </div>
+
+        <div class="predictions-grid">
+            <!-- First Half -->
+            <div class="prediction-card">
+                <h3>⏱ First Half Predictions</h3>
+                <div id="first-half-predictions"></div>
+            </div>
+
+            <!-- Full Match -->
+            <div class="prediction-card">
+                <h3> Full Match Predictions</h3>
+                <div id="full-match-predictions"></div>
+            </div>
+
+            <!-- Betting Insights (New) -->
+            <div class="prediction-card">
+                <h3> Betting Insights</h3>
+                <div id="betting-insights"></div>
+            </div>
+
+            <!-- Prediction Intervals -->
+            <div class="prediction-card">
+                <h3> Expected Goal Ranges (90% Conf)</h3>
+                <div id="prediction-intervals"></div>
+            </div>
+
+            <!-- Team Momentum -->
+            <div class="prediction-card">
+                <h3> Team Momentum</h3>
+                <div id="team-momentum"></div>
+            </div>
+
+            <!-- Total Goals -->
+            <div class="prediction-card">
+                <h3>Total Goals</h3>
+                <div id="total-goals-predictions"></div>
+            </div>
+
+            <!-- Insights -->
+            <div class="prediction-card">
+                <h3> Match Insights</h3>
+                <div id="insights"></div>
+            </div>
+
+            <!-- Model Quality -->
+            <div class="prediction-card">
+                <h3> Model Quality</h3>
+                <div id="model-quality"></div>
+            </div>
+
+            <!-- Both Teams to Score -->
+            <div class="prediction-card">
+                <h3>Both Teams to Score</h3>
+                <div id="both-teams-score"></div>
+            </div>
+
+            <!-- Clean Sheets -->
+            <div class="prediction-card">
+                <h3> Clean Sheet Probability</h3>
+                <div id="clean-sheets"></div>
+            </div>
+        </div>
+
+        <!-- Feedback / Retraining Section -->
+        <div class="feedback-section">
+            <div class="feedback-header">
+                <h2>📚 Teach the Model</h2>
+                <p>Match finished? Enter the real scores to help the model learn!</p>
+            </div>
+            <div class="feedback-controls">
+                <!-- Half-Time Scores -->
+                <div class="score-section">
+                    <h3 class="score-section-title">⏱ Half-Time Score</h3>
+                    <div class="score-row">
+                        <div class="score-input-group">
+                            <label>Home HT</label>
+                            <input type="number" id="ht-home-goals" min="0" placeholder="0">
+                        </div>
+                        <span class="score-separator">-</span>
+                        <div class="score-input-group">
+                            <label>Away HT</label>
+                            <input type="number" id="ht-away-goals" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Full-Time Scores -->
+                <div class="score-section">
+                    <h3 class="score-section-title">⚽ Full-Time Score</h3>
+                    <div class="score-row">
+                        <div class="score-input-group">
+                            <label>Home FT</label>
+                            <input type="number" id="real-home-goals" min="0" placeholder="0">
+                        </div>
+                        <span class="score-separator">-</span>
+                        <div class="score-input-group">
+                            <label>Away FT</label>
+                            <input type="number" id="real-away-goals" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-feedback" onclick="submitFeedback()">✅ Submit & Learn</button>
+            </div>
+            <div id="feedback-message" class="feedback-message"></div>
+        </div>
+
+    </div>
+
+    <!-- Batch Results Section -->
+    <div id="batch-results" class="results-container" style="display: none;">
+        <div class="results-header">
+            <h2>📋 Batch Analysis Results</h2>
+            <div id="batch-stats" class="batch-stats"></div>
+        </div>
+        <div id="batch-list" class="batch-grid">
+            <!-- Results injected here -->
+        </div>
+    </div>
+
+    <!-- Smart Calculator Section (Always Visible) -->
+    <div class="calculator-section">
+        <div class="calculator-header">
+            <h2> Smart Betting Calculator</h2>
+            <p>Calculate optimal stakes for guaranteed profits or maximizing returns</p>
+        </div>
+
+        <div class="calculator-controls">
+            <div class="calc-mode-switch">
+                <button class="mode-btn active" onclick="setCalcMode('budget', this)">💰 Maximize
+                    Budget</button>
+                <button class="mode-btn" onclick="setCalcMode('profit', this)">🎯 Target Profit</button>
+            </div>
+
+            <div class="input-group">
+                <label id="amount-label">Total Budget ($)</label>
+                <input type="number" id="calc-amount" value="100" min="1">
+            </div>
+        </div>
+
+        <!-- Quick Market Presets -->
+        <div class="calc-presets">
+            <span class="preset-label">Quick Markets:</span>
+            <button class="btn-preset" onclick="loadPreset('1x2')">Match Winner</button>
+            <button class="btn-preset" onclick="loadPreset('cs_ft')">FT Correct Score</button>
+            <button class="btn-preset" onclick="loadPreset('cs_ht')">HT Correct Score</button>
+            <button class="btn-preset" onclick="loadPreset('ou')">Over/Under</button>
+            <button class="btn-preset btn-clear" onclick="clearCalculator()">🗑️ Clear All</button>
+        </div>
+
+        <div class="odds-inputs" id="odds-rows">
+            <!-- Dynamic rows will look like this -->
+            <div class="odds-row">
+                <input type="text" placeholder="Option A (e.g. Home Win)" class="calc-name">
+                <input type="number" placeholder="Odds (e.g. 2.50)" class="calc-odd" step="0.01">
+                <button class="btn-remove" onclick="removeRow(this)">×</button>
+            </div>
+            <div class="odds-row">
+                <input type="text" placeholder="Option B (e.g. Draw)" class="calc-name">
+                <input type="number" placeholder="Odds (e.g. 3.20)" class="calc-odd" step="0.01">
+                <button class="btn-remove" onclick="removeRow(this)">×</button>
+            </div>
+        </div>
+
+        <div class="calc-actions">
+            <button class="btn-secondary" onclick="addOddRow()">+ Add Option</button>
+            <button class="btn-primary" onclick="calculateStakes()">Calculate Stakes</button>
+        </div>
+
+        <div id="calc-results" class="calc-results hidden">
+            <!-- Results will be injected here -->
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleHistoryModal()">&times;</span>
+            <h2>📜 Prediction History</h2>
+            <div class="history-table-container">
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Match</th>
+                            <th>Ranks</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-list">
+                        <!-- History items will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}?v=5"></script>
 </body>
 
 </html>

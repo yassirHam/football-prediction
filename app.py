@@ -10,6 +10,8 @@ import os
 import json
 from datetime import datetime
 from decision_engine.signal_generator import SignalGenerator
+from decision_logic import make_decision  # Import decision logic
+from daily_analyzer import DailyMatchAnalyzer  # Import batch analyzer
 
 # Load configuration to determine which predictor to use
 USE_HYBRID_MODE = True  # Can be toggled via config
@@ -122,6 +124,18 @@ def predict():
         is_cup = data.get('is_cup', False)
         result = predict_match(home_team, away_team, neutral_venue, is_cup=is_cup)
         
+        # ========== FIRST-HALF BETTING DECISION LOGIC ==========
+        # Extract xG values
+        xg_home = result['expected_goals']['home']
+        xg_away = result['expected_goals']['away']
+        
+        # Get first-half predictions (already sorted by probability)
+        first_half_preds = result['first_half_predictions']
+        
+        # Generate betting decision
+        betting_decision = make_decision(first_half_preds, xg_home, xg_away)
+        # =======================================================
+        
         # Save to History
         history_entry = {
             "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -178,13 +192,13 @@ def predict():
             "model_quality": result.get('model_quality', {}),
             "betting_insights": result.get('betting_insights', {}),
             "insights": result['insights'],
-            "insights": result['insights'],
             "prediction_mode": "hybrid" if USE_HYBRID_MODE else "poisson",
             "hybrid_metadata": {
                 "source": result.get('hybrid_metadata', {}).get('source', 'poisson'),
                 "confidence": float(result.get('hybrid_metadata', {}).get('confidence', 0))
             },
-            "decision_signal": signal_generator.generate_signal(result, league=data.get('home_team', {}).get('competition_type', 'DEFAULT'))
+            "decision_signal": signal_generator.generate_signal(result, league=data.get('home_team', {}).get('competition_type', 'DEFAULT')),
+            "first_half_betting_decision": betting_decision  # Add decision logic output
         }
         
         return jsonify(response)
@@ -358,6 +372,60 @@ def submit_feedback():
         print(f"Error saving feedback: {e}")
         import traceback
         traceback.print_exc()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+@app.route('/api/batch_analyze', methods=['POST'])
+def batch_analyze():
+    """Run automated analysis on a list of matches."""
+    try:
+        data = request.json
+        match_text = data.get('matches', '')
+        
+        if not match_text:
+            return jsonify({"success": False, "error": "No matches provided"}), 400
+            
+        # Parse matches from text
+        matches = []
+        lines = match_text.strip().split('\n')
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+            
+            # Simple "Home vs Away" parsing
+            if ' vs ' in line.lower():
+                parts = line.split(' vs ', 1)
+            elif ' v ' in line.lower():
+                parts = line.split(' v ', 1)
+            elif ' - ' in line:
+                parts = line.split(' - ', 1)
+            else:
+                continue
+                
+            if len(parts) == 2:
+                matches.append({
+                    'home': parts[0].strip(),
+                    'away': parts[1].strip(),
+                    'league': 'DEFAULT'
+                })
+        
+        if not matches:
+            return jsonify({"success": False, "error": "No valid matches found in text"}), 400
+            
+        # Initialize analyzer
+        analyzer = DailyMatchAnalyzer()
+        
+        # Run analysis (reusing existing logic)
+        signals = analyzer.analyze_daily_matches(matches)
+        
+        return jsonify({
+            "success": True,
+            "results": signals,
+            "stats": analyzer.stats
+        })
+        
+    except Exception as e:
+        print(f"Batch analysis error: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
 if __name__ == '__main__':

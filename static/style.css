@@ -1380,7 +1380,9 @@ input[type="number"].rank-input::placeholder {
 .badge-loss {
     background: rgba(239, 68, 68, 0.2);
     color: var(--error);
-}/* Tournament Context Styles - Premium Enhancement */
+}
+
+/* Tournament Context Styles - Premium Enhancement */
 
 
 
@@ -2934,7 +2936,9 @@ select:focus {
 #ht-home-goals:focus,
 #ht-away-goals:focus {
     background: var(--surface);
-}/* Hybrid Metadata Badge */
+}
+
+/* Hybrid Metadata Badge */
 .hybrid-badge {
     display: flex;
     align-items: center;
@@ -2977,6 +2981,7 @@ select:focus {
     color: var(--text-secondary);
     font-style: italic;
 }
+
 /* Decision Signal Card */
 .decision-card-container {
     max-width: 600px;
@@ -3070,4 +3075,285 @@ select:focus {
 
 .signal-weak .decision-title {
     color: var(--error);
+}
+
+/* First-Half Betting Decision Card Styles */
+.betting-decision-card {
+    grid-column: 1 / -1;
+    border: 3px solid;
+    border-image: linear-gradient(135deg, var(--primary), var(--secondary)) 1;
+    box-shadow: 0 8px 32px rgba(99, 102, 241, 0.2);
+}
+
+.betting-decision-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: 12px 12px 0 0;
+    margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+}
+
+.betting-decision-header.decision-top2 {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2) 0%, rgba(16, 185, 129, 0.1) 100%);
+    border-bottom: 2px solid var(--success);
+}
+
+.betting-decision-header.decision-top3 {
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(79, 70, 229, 0.1) 100%);
+    border-bottom: 2px solid var(--primary);
+}
+
+.betting-decision-header.decision-pass {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+    border-bottom: 2px solid var(--error);
+}
+
+.betting-icon {
+    font-size: 2.5rem;
+}
+
+.betting-decision-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.betting-subtitle {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.betting-decision-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.decision-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    background: var(--background);
+    border-radius: 10px;
+    border: 1px solid var(--surface-light);
+    transition: all 0.3s ease;
+}
+
+.metric-item:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.2);
+}
+
+.metric-label {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.metric-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.decision-reason {
+    padding: 1.25rem;
+    background: var(--background);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.decision-reason strong {
+    color: var(--primary-light);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+/* Batch Analyzer Styles */
+.batch-input {
+    width: 100%;
+    padding: 1rem;
+    border: 1px solid var(--surface-light);
+    border-radius: 8px;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 0.5rem;
+    background: var(--background);
+    color: var(--text);
+    transition: all 0.3s ease;
+}
+
+.batch-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.input-hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.batch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.batch-card {
+    background: var(--surface);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    border-left: 4px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.batch-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.border-top2 {
+    border-left-color: var(--success);
+}
+
+.border-top3 {
+    border-left-color: var(--warning);
+}
+
+.batch-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.decision-badge {
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge-top2 {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success);
+}
+
+.badge-top3 {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+}
+
+.batch-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.batch-probs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.prob-tag {
+    background: var(--background);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.batch-metrics {
+    display: flex;
+    gap: 1rem;
+    margin: 0.25rem 0;
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.1);
+    padding: 0.4rem;
+    border-radius: 4px;
+}
+
+.batch-metrics strong {
+    color: var(--text);
+}
+
+.batch-reason {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
+.stat-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.9em;
+    margin-left: 0.5rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+}
+
+.stat-badge.success {
+    background: rgba(34, 197, 94, 0.2);
+    color: var(--success);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.stat-badge.warning {
+    background: rgba(245, 158, 11, 0.2);
+    color: var(--accent);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.stat-badge.neutral {
+    background: rgba(148, 163, 184, 0.2);
+    color: var(--text-secondary);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.batch-stats {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+}
+
+.no-signals {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    background: var(--surface);
+    border-radius: 8px;
+    font-style: italic;
 }
